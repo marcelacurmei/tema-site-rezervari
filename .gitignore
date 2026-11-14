@@ -1,0 +1,8 @@
+# Cheile stau doar aici, pe Mac, sau în setările Vercel – niciodată pe GitHub
+.env
+.env.*
+!.env.example
+node_modules/
+.vercel/
+.DS_Store
+capturi/

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Panou cereri – Airport Boutique Residence</title>
+  <meta name="theme-color" content="#1f3a3d">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f3a3d'/%3E%3Cpath d='M14 34 32 18l18 16v14H38V38H26v10H14z' fill='%23e9c46a'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+  <header class="sus">
+    <div class="sus__interior">
+      <span class="marca">Panou cereri</span>
+      <button type="button" id="iesire" class="buton-mic" hidden>Ieșire</button>
+    </div>
+  </header>
+
+  <main class="panou">
+    <!-- Logare -->
+    <section id="ecran-logare" class="card logare" hidden>
+      <h1>Intrare în panou</h1>
+      <p class="nota">Doar pentru gazdă. Cererile se văd numai după logare.</p>
+      <form id="form-logare" novalidate>
+        <div class="camp">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="username" required>
+        </div>
+        <div class="camp">
+          <label for="parola">Parola</label>
+          <input id="parola" name="parola" type="password" autocomplete="current-password" required>
+        </div>
+        <p class="eroare eroare--generala" id="eroare-logare" role="alert"></p>
+        <button class="buton buton--lat" type="submit" id="buton-logare">Intră</button>
+      </form>
+    </section>
+
+    <!-- Lista cererilor -->
+    <section id="ecran-cereri" hidden>
+      <div class="bara">
+        <h1>Cereri de rezervare</h1>
+        <button type="button" id="reincarca" class="buton-mic buton-mic--contur">↻ Reîncarcă</button>
+      </div>
+
+      <div id="telegram" class="cutie" hidden></div>
+
+      <div class="filtre" role="tablist" aria-label="Filtru după status">
+        <button type="button" role="tab" data-filtru="">Toate <span></span></button>
+        <button type="button" role="tab" data-filtru="noua">Noi <span></span></button>
+        <button type="button" role="tab" data-filtru="in_lucru">În lucru <span></span></button>
+        <button type="button" role="tab" data-filtru="inchisa">Închise <span></span></button>
+      </div>
+
+      <p id="mesaj-lista" class="mesaj-lista" role="status"></p>
+      <ul id="lista" class="lista"></ul>
+
+      <p class="subsol-panou">
+        <button type="button" id="test-telegram" class="buton-mic buton-mic--contur" hidden>Trimite un mesaj de probă pe Telegram</button>
+        <span id="rezultat-test" role="status"></span>
+      </p>
+    </section>
+  </main>
+
+  <script type="module" src="/admin.js"></script>
+</body>
+</html>

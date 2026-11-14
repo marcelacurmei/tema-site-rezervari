@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "site-local",
+      "runtimeExecutable": "/Users/Guest2/.local/node/bin/node",
+      "runtimeArgs": ["scripts/local.mjs"],
+      "port": 3000
+    }
+  ]
+}

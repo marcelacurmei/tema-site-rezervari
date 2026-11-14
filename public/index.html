@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Airport Boutique Residence – Chișinău, lângă aeroport</title>
+  <meta name="description" content="Studio confortabil în Satul German, Chișinău, la 5 minute de aeroport. Rezervare directă, fără comision.">
+  <meta name="theme-color" content="#1f3a3d">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f3a3d'/%3E%3Cpath d='M14 34 32 18l18 16v14H38V38H26v10H14z' fill='%23e9c46a'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="sus">
+    <div class="sus__interior">
+      <a class="marca" href="/">Airport Boutique Residence</a>
+      <nav class="limbi" aria-label="Limba">
+        <button type="button" data-limba="ro">RO</button>
+        <button type="button" data-limba="ru">RU</button>
+        <button type="button" data-limba="uk">UA</button>
+        <button type="button" data-limba="en">EN</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="erou">
+      <div class="erou__interior">
+        <p class="eticheta" data-t="eticheta">Chișinău · Satul German</p>
+        <h1 data-t="titlu">Studio liniștit la 5 minute de aeroport</h1>
+        <p class="erou__text" data-t="subtitlu">Ideal pentru zboruri devreme sau sosiri târzii. Rezervați direct la gazdă, fără comisionul platformelor.</p>
+        <a class="buton buton--mare" href="#cerere" data-t="buton_erou">Cere o rezervare</a>
+      </div>
+    </section>
+
+    <section class="avantaje" aria-label="Ce primiți">
+      <ul class="grila">
+        <li><span class="ic" aria-hidden="true">✈️</span><b data-t="a1_t">5 minute de aeroport</b><span data-t="a1_d">cu taxiul, ziua sau noaptea</span></li>
+        <li><span class="ic" aria-hidden="true">🛏️</span><b data-t="a2_t">Studio 29 m²</b><span data-t="a2_d">până la 2 adulți și 1 copil</span></li>
+        <li><span class="ic" aria-hidden="true">🅿️</span><b data-t="a3_t">Parcare gratuită</b><span data-t="a3_d">chiar lângă bloc</span></li>
+        <li><span class="ic" aria-hidden="true">📶</span><b data-t="a4_t">Wi-Fi gratuit</b><span data-t="a4_d">rapid, în tot apartamentul</span></li>
+        <li><span class="ic" aria-hidden="true">🕑</span><b data-t="a5_t">Check-in de la 14:00</b><span data-t="a5_d">sosirea târzie e acceptată</span></li>
+        <li><span class="ic" aria-hidden="true">💸</span><b data-t="a6_t">Rezervare directă</b><span data-t="a6_d">fără intermediari și comisioane</span></li>
+      </ul>
+    </section>
+
+    <section id="cerere" class="cerere">
+      <div class="card">
+        <div id="zona-formular">
+          <h2 data-t="f_titlu">Cerere de rezervare</h2>
+          <p class="nota" data-t="f_nota">Completați formularul și vă răspundem cât mai repede cu prețul și disponibilitatea. Cererea nu vă obligă la nimic.</p>
+
+          <form id="formular" novalidate>
+            <div class="camp">
+              <label for="nume" data-t="l_nume">Nume și prenume</label>
+              <input id="nume" name="nume" type="text" autocomplete="name" maxlength="100" required aria-describedby="eroare-nume">
+              <p class="eroare" id="eroare-nume" role="alert"></p>
+            </div>
+
+            <div class="camp">
+              <label for="telefon" data-t="l_telefon">Telefon (Viber / WhatsApp / Telegram)</label>
+              <input id="telefon" name="telefon" type="tel" inputmode="tel" autocomplete="tel" maxlength="30" placeholder="+373 …" required aria-describedby="eroare-telefon">
+              <p class="eroare" id="eroare-telefon" role="alert"></p>
+            </div>
+
+            <div class="rand">
+              <div class="camp">
+                <label for="sosire" data-t="l_sosire">Sosire</label>
+                <input id="sosire" name="sosire" type="date" required aria-describedby="eroare-sosire">
+                <p class="eroare" id="eroare-sosire" role="alert"></p>
+              </div>
+              <div class="camp">
+                <label for="plecare" data-t="l_plecare">Plecare</label>
+                <input id="plecare" name="plecare" type="date" required aria-describedby="eroare-plecare">
+                <p class="eroare" id="eroare-plecare" role="alert"></p>
+              </div>
+            </div>
+
+            <div class="camp">
+              <label for="oaspeti" data-t="l_oaspeti">Număr de oaspeți</label>
+              <select id="oaspeti" name="oaspeti" aria-describedby="eroare-oaspeti">
+                <option value="1">1</option>
+                <option value="2" selected>2</option>
+                <option value="3">3</option>
+              </select>
+              <p class="eroare" id="eroare-oaspeti" role="alert"></p>
+            </div>
+
+            <div class="camp">
+              <label for="comentariu"><span data-t="l_comentariu">Comentariu</span> <span class="optional" data-t="optional">(opțional)</span></label>
+              <textarea id="comentariu" name="comentariu" rows="3" maxlength="1000" data-t-placeholder="p_comentariu" placeholder="Ora sosirii, numărul zborului, întrebări…" aria-describedby="eroare-comentariu"></textarea>
+              <p class="eroare" id="eroare-comentariu" role="alert"></p>
+            </div>
+
+            <!-- Câmp-capcană pentru roboții de spam: oamenii nu îl văd. -->
+            <div class="capcana" aria-hidden="true">
+              <label for="site">Nu completați</label>
+              <input id="site" name="site" type="text" tabindex="-1" autocomplete="off">
+            </div>
+
+            <p class="eroare eroare--generala" id="eroare-generala" role="alert"></p>
+            <button class="buton buton--lat" type="submit" id="trimite" data-t="trimite">Trimite cererea</button>
+          </form>
+        </div>
+
+        <div id="confirmare" class="confirmare" hidden tabindex="-1">
+          <div class="bifa" aria-hidden="true">✓</div>
+          <h2 data-t="c_titlu">Mulțumim! Cererea a fost trimisă.</h2>
+          <p id="c-rezumat"></p>
+          <p data-t="c_text">Vă contactăm în curând la numărul de telefon indicat.</p>
+          <button class="buton buton--secundar" type="button" id="din-nou" data-t="din_nou">Trimite altă cerere</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="info">
+      <h2 data-t="i_titlu">Bine de știut</h2>
+      <ul>
+        <li data-t="i1">Check-in de la 14:00, check-out până la 12:00.</li>
+        <li data-t="i2">Fumatul și petrecerile sunt interzise.</li>
+        <li data-t="i3">Adresa: str. Europa 7, Satul German, Chișinău.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="jos">
+    <p>© <span id="an"></span> Airport Boutique Residence · Chișinău</p>
+  </footer>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

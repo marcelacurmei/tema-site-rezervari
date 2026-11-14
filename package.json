@@ -1,0 +1,12 @@
+{
+  "name": "tema-site-rezervari",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Site cu cereri de rezervare directă și panou de administrare – Airport Boutique Residence",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "dev": "node scripts/local.mjs",
+    "test": "node --test test/*.test.mjs"
+  }
+}
