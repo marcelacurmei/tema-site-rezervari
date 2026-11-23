@@ -15,9 +15,9 @@ Termen: **23 noiembrie 2026, 23:59**, ora Chișinăului.
 
 ## Pasul 2. Cheia Claude API (5 minute)
 
-1. Intrați pe **console.anthropic.com** și logați-vă (sau faceți cont).
-2. **Settings** → **Billing**: adăugați cardul și puneți 5 $ (ajung pentru sute de bonuri).
-3. **Settings** → **Limits**: la **Spend limit** puneți o limită lunară mică, de exemplu **10 $**. Aceasta e „limita de cheltuieli” cerută la punctul 7.
+1. Intrați pe **platform.claude.com** (Claude Console) cu **Continue with Google** și alegeți **Individual**.
+2. Abonamentul Claude Max include 100 $ pe lună credit API: **Link and claim $100** (fără card).
+3. **Spending & usage** → **Spend limits** → **Monthly spend limit** → **Adjust limit**: **10 $**. Aceasta e „limita de cheltuieli” cerută la punctul 7.
 4. **API Keys** → **Create Key**, numele `tema-site`. Copiați cheia (începe cu `sk-ant-`). Se arată o singură dată.
 5. În **Vercel** → proiectul → **Settings** → **Environment Variables** → **Add**: Name `ANTHROPIC_API_KEY`, Value = cheia. **Save**.
 
@@ -25,8 +25,8 @@ Termen: **23 noiembrie 2026, 23:59**, ora Chișinăului.
 
 1. Intrați pe **aistudio.google.com** cu contul Google.
 2. Apăsați **Get API key** → **Create API key**. Copiați cheia (începe cu `AIza`).
-3. Generarea de imagini cere plată activată: în AI Studio, la **Billing**, apăsați **Set up billing** și adăugați cardul.
-4. Limita de cheltuieli: în același loc (**Billing** / **Spend**) puneți o limită lunară, de exemplu **5 $**. Dacă vi se cere un „budget” în Google Cloud, puneți tot 5 $ cu alertă pe email.
+3. Generarea de imagini cere plată activată: în AI Studio, la **Billing**, alegeți **Default Gemini Project** → **Set up billing** și adăugați cardul (Google blochează temporar 50 $ pentru verificare).
+4. Limita de cheltuieli: **aistudio.google.com/spend** → **Monthly spend cap** → **Edit spend cap**: **5 $**.
 5. În **Vercel**, adăugați: Name `GEMINI_API_KEY`, Value = cheia. **Save**.
 
 ## Pasul 4. Publicarea
