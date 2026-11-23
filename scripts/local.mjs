@@ -17,10 +17,14 @@ if (existsSync(fisierEnv)) {
     if (m && m[2]) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '');
   }
   console.log('Folosesc cheile reale din .env.local');
-} else {
+}
+let fals = null;
+if (!existsSync(fisierEnv)) {
   const { instaleazaFals } = await import('./fals.mjs');
-  instaleazaFals();
-  console.log('Mod de probă: baza și Telegram sunt simulate în memorie.');
+  // Fișierele „din Supabase” le servește chiar acest server, ca pozele să se vadă în panou.
+  fals = instaleazaFals({ url: `http://localhost:${port}` });
+  console.log('Mod de probă: baza, Telegram, Claude și Gemini sunt simulate în memorie.');
+  console.log(`Mini App de probă (ca din Telegram): http://localhost:${port}/__proba-mini`);
 }
 
 const TIPURI = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.ico': 'image/x-icon' };
@@ -36,6 +40,24 @@ async function citesteCorp(req) {
 http.createServer(async (req, res) => {
   const u = new URL(req.url, `http://localhost:${port}`);
   try {
+    if (fals && u.pathname.startsWith('/storage/v1/object/sign/')) {
+      const cale = decodeURIComponent(u.pathname.slice('/storage/v1/object/sign/'.length));
+      const f = fals.fisiere.get(cale);
+      if (!f) { res.writeHead(404).end(); return; }
+      res.writeHead(200, { 'Content-Type': f.tip || 'application/octet-stream' }).end(f.octeti);
+      return;
+    }
+    if (fals && u.pathname === '/__proba-mini') {
+      // Date semnate exact ca de Telegram, pentru un utilizator inventat.
+      const { semneazaInitData } = await import('../lib/telegram-mini.js');
+      const date = semneazaInitData({
+        user: JSON.stringify({ id: 777, first_name: 'Olena', last_name: 'Kovalenko', username: 'olena_k', language_code: u.searchParams.get('limba') || 'ro' }),
+        auth_date: String(Math.floor(Date.now() / 1000)), query_id: 'proba',
+      }, process.env.TELEGRAM_BOT_TOKEN);
+      const hash = new URLSearchParams({ tgWebAppData: date, tgWebAppVersion: '8.0', tgWebAppPlatform: 'unknown' }).toString();
+      res.writeHead(302, { Location: `/mini#${hash}` }).end();
+      return;
+    }
     if (u.pathname.startsWith('/api/')) {
       const fisier = path.join(radacina, `${u.pathname}.js`);
       if (!fisier.startsWith(path.join(radacina, 'api')) || !existsSync(fisier)) { res.writeHead(404).end('{}'); return; }

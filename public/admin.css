@@ -51,3 +51,123 @@
 .cutie code { background: #fff; border: 1px solid var(--margine); border-radius: 6px; padding: 2px 6px; font-size: .95em; user-select: all; }
 
 .subsol-panou { margin-top: 24px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; color: var(--text-slab); font-size: .9rem; }
+
+/* ---------- Tema 2: file, CRM, cheltuieli, imagini ---------- */
+body[data-fila="crm"] .panou { max-width: 1400px; }
+.file { display: flex; gap: 4px; overflow-x: auto; padding: 0 12px 8px; max-width: 1400px; margin: 0 auto; scrollbar-width: none; }
+.file a {
+  flex: 0 0 auto; color: rgba(255,255,255,.82); text-decoration: none; font-size: .92rem; font-weight: 600;
+  padding: 8px 14px; border-radius: 999px; min-height: 38px; display: inline-flex; align-items: center;
+}
+.file a[aria-current="true"] { background: var(--auriu); color: var(--accent); }
+.bara__butoane { display: flex; gap: 8px; flex-wrap: wrap; }
+.bara--mica { margin-top: 26px; }
+.bara--mica h2 { margin: 0; font-size: 1.2rem; }
+.nota--mica { font-size: .86rem; color: var(--text-slab); margin: 4px 0 12px; }
+.panou h2 { font-size: 1.15rem; }
+.panou h3 { font-size: 1rem; margin: 18px 0 8px; }
+
+/* Tabla CRM: coloane una lângă alta, pe telefon se derulează în lateral */
+.tabla { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(250px, 1fr); gap: 12px; overflow-x: auto; padding-bottom: 12px; scroll-snap-type: x mandatory; }
+.coloana { background: #efebe3; border-radius: var(--raza); padding: 10px; min-height: 240px; scroll-snap-align: start; display: flex; flex-direction: column; transition: background .15s; }
+.coloana.peste { background: #e3ecea; outline: 2px dashed var(--accent); }
+.coloana[data-etapa="refuz"] { background: #f4ecec; }
+.coloana__titlu { font-family: inherit; font-size: .95rem !important; margin: 2px 4px 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.coloana__nr { background: #fff; border-radius: 999px; padding: 1px 9px; font-size: .8rem; color: var(--text-slab); }
+.coloana__lista { display: grid; gap: 8px; align-content: start; flex: 1; }
+.coloana__gol { color: var(--text-slab); font-size: .85rem; text-align: center; margin: 18px 0; }
+.fisa-card {
+  all: unset; box-sizing: border-box; display: grid; gap: 4px; background: var(--suprafata); border-radius: 12px; padding: 12px;
+  box-shadow: 0 1px 3px rgba(31,58,61,.12); cursor: pointer; border-left: 4px solid var(--auriu);
+}
+.fisa-card:hover, .fisa-card:focus-visible { box-shadow: 0 4px 14px rgba(31,58,61,.18); outline: none; }
+.fisa-card.trage { opacity: .5; }
+.coloana[data-etapa="contactat"] .fisa-card { border-left-color: #2563eb; }
+.coloana[data-etapa="confirmata"] .fisa-card { border-left-color: #1e7a4c; }
+.coloana[data-etapa="cazat"] .fisa-card { border-left-color: #6b7280; }
+.coloana[data-etapa="refuz"] .fisa-card { border-left-color: #b42318; }
+.fisa-card__nume { font-weight: 700; overflow-wrap: anywhere; }
+.fisa-card__tel { font-size: .88rem; color: var(--text-slab); }
+.fisa-card__jos { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-top: 4px; }
+.fisa-card__data { font-size: .78rem; color: var(--text-slab); }
+.sursa { font-size: .74rem; font-weight: 700; border-radius: 999px; padding: 2px 8px; background: #eef2f1; color: var(--accent); white-space: nowrap; }
+.sursa[data-sursa="Telegram"] { background: #e3f2fd; color: #0b6aa8; }
+.sursa[data-sursa="Manual"] { background: #fdf3dc; color: #8a5a00; }
+
+/* Fișa clientului (fereastră) */
+.fisa { border: 0; border-radius: 18px; padding: 22px 20px; width: min(560px, calc(100vw - 24px)); max-height: calc(100vh - 32px); box-shadow: 0 20px 60px rgba(0,0,0,.25); color: var(--text); }
+.fisa::backdrop { background: rgba(20,30,30,.45); }
+.fisa__inchide { position: absolute; top: 10px; right: 10px; margin: 0; }
+.fisa__inchide button { all: unset; cursor: pointer; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; font-size: 1.1rem; }
+.fisa__inchide button:hover { background: #f0ede7; }
+.fisa__titlu { margin-right: 40px; }
+.fisa__date { display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; margin: 12px 0 16px; font-size: .95rem; align-items: center; }
+.fisa__date dt { color: var(--text-slab); }
+.fisa__date dd { margin: 0; overflow-wrap: anywhere; }
+.fisa__date a { color: var(--accent); font-weight: 600; }
+.pre { white-space: pre-wrap; }
+.status-select[data-etapa] { background-color: #f6f3ee; }
+.butoane-rand { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.istoric { list-style: none; margin: 0; padding: 0 0 0 14px; border-left: 2px solid var(--margine); display: grid; gap: 8px; font-size: .9rem; }
+.istoric li { display: grid; gap: 1px; position: relative; }
+.istoric li::before { content: ''; position: absolute; left: -20px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--auriu); }
+.istoric__data { color: var(--text-slab); font-size: .8rem; }
+
+/* Cheltuieli */
+.alege-fisier { cursor: pointer; }
+.doc-lucru { display: grid; grid-template-columns: minmax(0, 240px) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 860px) { .doc-lucru { grid-template-columns: 1fr; } .doc-previzualizare img { max-height: 260px; } }
+.doc-previzualizare img { width: 100%; border-radius: 10px; border: 1px solid var(--margine); max-height: 420px; object-fit: contain; background: #fafafa; }
+.doc-pdf { display: grid; place-items: center; gap: 6px; padding: 30px 10px; border: 1px dashed var(--margine); border-radius: 10px; text-align: center; overflow-wrap: anywhere; font-size: .9rem; }
+.doc-pdf span:first-child { font-size: 2.4rem; }
+.doc-stare { font-weight: 600; margin: 0 0 10px; }
+.doc-stare:empty { display: none; }
+.cutie--rosie { background: var(--eroare-fundal); border-color: #f3b8b0; color: var(--eroare); }
+.cutie--rosie p { margin: 6px 0 0; color: var(--text); }
+.grila-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.doc-form .camp { margin-bottom: 10px; }
+.doc-form .eroare:empty { display: none; }
+.cheltuiala { background: var(--suprafata); border-radius: var(--raza); box-shadow: var(--umbra); padding: 14px 16px; }
+.cheltuiala__sus { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.cheltuiala__furnizor { font-weight: 700; margin: 0; overflow-wrap: anywhere; }
+.cheltuiala__meta { font-size: .85rem; color: var(--text-slab); margin: 2px 0 0; }
+.cheltuiala__suma { font-weight: 800; font-size: 1.1rem; margin: 0; white-space: nowrap; }
+.cheltuiala__desc { font-size: .92rem; margin: 8px 0 0; }
+.cheltuiala__jos { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+.cheltuiala__jos .nota { margin: 0; }
+
+/* Imagini */
+.insigna { background: #e7f3ec; color: var(--succes); font-weight: 700; font-size: .88rem; padding: 6px 12px; border-radius: 999px; }
+.insigna[data-gata="true"] { background: var(--eroare-fundal); color: var(--eroare); }
+.buton--contur-mare { display: flex; align-items: center; justify-content: center; min-height: 54px; border: 2px dashed var(--accent); border-radius: 12px; color: var(--accent); font-weight: 700; background: #faf8f4; }
+.img-previzualizare { display: block; max-width: 100%; max-height: 260px; border-radius: 10px; margin: 12px 0 0; }
+.stiluri { border: 0; padding: 0; margin: 16px 0 12px; display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.stiluri legend { font-weight: 600; margin-bottom: 8px; font-size: .95rem; }
+.stiluri label { cursor: pointer; }
+.stiluri input { position: absolute; opacity: 0; }
+.stiluri span { display: grid; gap: 2px; border: 1.5px solid var(--margine); border-radius: 12px; padding: 10px 12px; height: 100%; }
+.stiluri small { color: var(--text-slab); }
+.stiluri input:checked + span { border-color: var(--accent); background: #eef4f3; box-shadow: inset 0 0 0 1px var(--accent); }
+.stiluri input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.galerie { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.galerie__el { background: var(--suprafata); border-radius: var(--raza); box-shadow: var(--umbra); overflow: hidden; }
+.galerie__rezultat img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: #eee; }
+.galerie__info { display: flex; gap: 10px; padding: 10px 12px 12px; align-items: flex-start; }
+.galerie__sursa { width: 56px; height: 56px; object-fit: cover; border-radius: 8px; flex: 0 0 auto; }
+.galerie__info p { margin: 0; }
+.galerie__stil { font-weight: 700; font-size: .92rem; }
+.link-mic { font-size: .85rem; color: var(--accent); font-weight: 600; }
+
+.mini-card { margin-top: 22px; }
+.mini-date { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; font-size: .92rem; margin: 0 0 8px; }
+.mini-date dt { color: var(--text-slab); }
+.mini-date dd { margin: 0; overflow-wrap: anywhere; }
+.mini-date code { background: #f6f3ee; border-radius: 6px; padding: 2px 6px; user-select: all; }
+
+@media (max-width: 640px) {
+  .doc-lucru { grid-template-columns: 1fr; }
+  .doc-previzualizare img { max-height: 240px; }
+  .tabla { grid-auto-columns: 82%; }
+}
+#fila-cheltuieli .card, #fila-imagini .card, .mini-card { max-width: none; margin: 0 0 16px; }
+.panou .card h2 { font-size: 1.2rem; }

@@ -1,59 +1,58 @@
 import { formatOra, formatData, noptiIntre } from '/comun.js';
+import { $, api, el, citesteSesiune, salveazaSesiune, stergeSesiune, laIesire } from '/admin-baza.js';
+import * as crm from '/admin-crm.js';
+import * as cheltuieli from '/admin-cheltuieli.js';
+import * as imagini from '/admin-imagini.js';
 
 const ETICHETE = { noua: 'Nouă', in_lucru: 'În lucru', inchisa: 'Închisă' };
 const LIMBI = { ro: 'română', ru: 'rusă', uk: 'ucraineană', en: 'engleză' };
-const $ = (id) => document.getElementById(id);
 
-let token = null;
 let cereri = [];
 let filtru = '';
 
-// ---------- sesiunea (ține doar cât e deschisă fila) ----------
-function citesteSesiune() {
-  try {
-    const s = JSON.parse(sessionStorage.getItem('sesiune') || 'null');
-    if (s && s.token && s.expira > Date.now() + 30000) return s.token;
-  } catch { /* fără memorie – trebuie logare */ }
-  return null;
-}
-function salveazaSesiune(t, expira) {
-  token = t;
-  try { sessionStorage.setItem('sesiune', JSON.stringify({ token: t, expira })); } catch { /* nu e grav */ }
-}
-function stergeSesiune() {
-  token = null;
-  try { sessionStorage.removeItem('sesiune'); } catch { /* nu e grav */ }
-}
-
-async function api(cale, optiuni = {}) {
-  const r = await fetch(cale, {
-    ...optiuni,
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, ...(optiuni.headers || {}) },
-  });
-  const date = await r.json().catch(() => ({}));
-  if (r.status === 401 || r.status === 403) {
-    stergeSesiune();
-    arataLogare(date.eroare || 'Sesiunea a expirat. Logați-vă din nou.');
-    throw new Error('neautorizat');
-  }
-  if (!r.ok || date.ok === false) throw new Error(date.eroare || `Eroare ${r.status}`);
-  return date;
-}
+laIesire((mesaj) => arataLogare(mesaj));
 
 // ---------- ecrane ----------
+const token = () => citesteSesiune();
+
 function arataLogare(mesaj = '') {
-  $('ecran-cereri').hidden = true;
+  for (const f of Object.values(FILE)) $(f.sectiune).hidden = true;
+  $('file').hidden = true;
   $('iesire').hidden = true;
   $('ecran-logare').hidden = false;
   $('eroare-logare').textContent = mesaj;
   $('email').focus();
 }
 
+// ---------- filele panoului ----------
+const FILE = {
+  crm: { sectiune: 'fila-crm', incarca: () => crm.incarca() },
+  cereri: { sectiune: 'ecran-cereri', incarca: () => Promise.all([incarcaCereri(), verificaTelegram()]) },
+  cheltuieli: { sectiune: 'fila-cheltuieli', incarca: () => cheltuieli.incarca() },
+  imagini: { sectiune: 'fila-imagini', incarca: () => imagini.incarca() },
+};
+let filaCurenta = null;
+
+function filaDinAdresa() {
+  const h = location.hash.replace('#', '');
+  return FILE[h] ? h : 'crm';
+}
+
+async function deschideFila(nume) {
+  filaCurenta = nume;
+  for (const [k, f] of Object.entries(FILE)) $(f.sectiune).hidden = k !== nume;
+  document.querySelectorAll('[data-fila]').forEach((b) => b.setAttribute('aria-current', String(b.dataset.fila === nume)));
+  document.body.dataset.fila = nume;
+  await FILE[nume].incarca();
+}
+
+window.addEventListener('hashchange', () => { if (token() && filaDinAdresa() !== filaCurenta) deschideFila(filaDinAdresa()); });
+
 async function arataCereri() {
   $('ecran-logare').hidden = true;
-  $('ecran-cereri').hidden = false;
+  $('file').hidden = false;
   $('iesire').hidden = false;
-  await Promise.all([incarcaCereri(), verificaTelegram()]);
+  await deschideFila(filaDinAdresa());
 }
 
 // ---------- logare ----------
@@ -94,13 +93,6 @@ async function incarcaCereri() {
   }
 }
 
-function el(tag, props = {}, ...copii) {
-  const n = document.createElement(tag);
-  Object.assign(n, props);
-  for (const c of copii) if (c != null) n.append(c);
-  return n;
-}
-
 function cardCerere(c) {
   const select = el('select', { className: 'status-select', ariaLabel: `Status pentru ${c.nume}` });
   for (const [v, t] of Object.entries(ETICHETE)) select.append(el('option', { value: v, textContent: t, selected: v === c.status }));
@@ -122,6 +114,7 @@ function cardCerere(c) {
         el('p', { className: 'cerere-card__ora', textContent: `Primită: ${formatOra(c.created_at)}` })),
       select),
     el('dl', {},
+      el('dt', { textContent: 'Sursa' }), el('dd', { textContent: c.sursa || 'Site' }),
       el('dt', { textContent: 'Telefon' }), contact,
       el('dt', { textContent: 'Perioada' }), el('dd', { textContent: `${formatData(c.sosire)} – ${formatData(c.plecare)} (${nopti} ${nopti === 1 ? 'noapte' : 'nopți'})` }),
       el('dt', { textContent: 'Oaspeți' }), el('dd', { textContent: String(c.oaspeti) }),
@@ -171,6 +164,7 @@ async function verificaTelegram() {
   const cutie = $('telegram');
   try {
     const d = await api('/api/admin/telegram');
+    deseneazaMini(d);
     $('test-telegram').hidden = !(d.areToken && d.areChat);
     if (d.areToken && d.areChat) { cutie.hidden = true; return; }
     cutie.hidden = false;
@@ -196,6 +190,30 @@ async function verificaTelegram() {
 
 $('reincarca').addEventListener('click', verificaTelegram);
 
+// ---------- Telegram Mini App ----------
+function deseneazaMini(d) {
+  const cutie = $('mini-app');
+  cutie.hidden = !d.areToken;
+  if (!d.areToken) return;
+  $('mini-bot').replaceChildren(d.bot ? el('a', { href: `https://t.me/${d.bot}`, target: '_blank', rel: 'noopener', textContent: `@${d.bot}` }) : '—');
+  $('mini-adresa').replaceChildren(el('code', { textContent: d.mini }));
+}
+
+$('conecteaza-mini').addEventListener('click', async () => {
+  const b = $('conecteaza-mini');
+  b.disabled = true; $('rezultat-mini').textContent = 'Se conectează…';
+  try {
+    const d = await api('/api/admin/telegram', { method: 'POST', body: JSON.stringify({ actiune: 'mini' }) });
+    $('rezultat-mini').textContent = d.ok
+      ? `✅ Gata. În Telegram, deschideți @${d.bot}: jos, lângă câmpul de mesaj, apare butonul „Rezervare”.`
+      : `❌ ${d.eroare}`;
+  } catch (e) {
+    if (e.message !== 'neautorizat') $('rezultat-mini').textContent = `❌ ${e.message}`;
+  } finally {
+    b.disabled = false;
+  }
+});
+
 $('test-telegram').addEventListener('click', async () => {
   const b = $('test-telegram');
   b.disabled = true; $('rezultat-test').textContent = 'Se trimite…';
@@ -210,5 +228,4 @@ $('test-telegram').addEventListener('click', async () => {
 });
 
 // ---------- pornire ----------
-token = citesteSesiune();
-if (token) arataCereri(); else arataLogare();
+if (citesteSesiune()) arataCereri(); else arataLogare();

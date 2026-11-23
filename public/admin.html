@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title>Panou cereri – Airport Boutique Residence</title>
+  <title>Panou – Airport Boutique Residence</title>
   <meta name="theme-color" content="#1f3a3d">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f3a3d'/%3E%3Cpath d='M14 34 32 18l18 16v14H38V38H26v10H14z' fill='%23e9c46a'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="/style.css">
@@ -13,16 +13,22 @@
 <body>
   <header class="sus">
     <div class="sus__interior">
-      <span class="marca">Panou cereri</span>
+      <span class="marca">Panou gazdă</span>
       <button type="button" id="iesire" class="buton-mic" hidden>Ieșire</button>
     </div>
+    <nav id="file" class="file" aria-label="Secțiunile panoului" hidden>
+      <a href="#crm" data-fila="crm">👥 CRM</a>
+      <a href="#cereri" data-fila="cereri">📩 Cereri</a>
+      <a href="#cheltuieli" data-fila="cheltuieli">🧾 Cheltuieli</a>
+      <a href="#imagini" data-fila="imagini">🖼️ Imagini</a>
+    </nav>
   </header>
 
   <main class="panou">
     <!-- Logare -->
     <section id="ecran-logare" class="card logare" hidden>
       <h1>Intrare în panou</h1>
-      <p class="nota">Doar pentru gazdă. Cererile se văd numai după logare.</p>
+      <p class="nota">Doar pentru gazdă. Datele se văd numai după logare.</p>
       <form id="form-logare" novalidate>
         <div class="camp">
           <label for="email">Email</label>
@@ -37,7 +43,21 @@
       </form>
     </section>
 
-    <!-- Lista cererilor -->
+    <!-- CRM: panou pe etape -->
+    <section id="fila-crm" hidden>
+      <div class="bara">
+        <h1>Clienți pe etape</h1>
+        <div class="bara__butoane">
+          <button type="button" id="crm-reincarca" class="buton-mic buton-mic--contur">↻ Reîncarcă</button>
+          <button type="button" id="crm-nou" class="buton-mic">+ Client nou</button>
+        </div>
+      </div>
+      <p class="nota nota--mica">Cererile de pe site și din Telegram apar singure în „Cerere nouă”. Mutați fișa trăgând-o în altă coloană sau din fișă, cu „Mută în etapa”.</p>
+      <p id="crm-mesaj" class="mesaj-lista" role="status"></p>
+      <div id="tabla" class="tabla"></div>
+    </section>
+
+    <!-- Cererile de pe site (tema 1) -->
     <section id="ecran-cereri" hidden>
       <div class="bara">
         <h1>Cereri de rezervare</h1>
@@ -56,12 +76,130 @@
       <p id="mesaj-lista" class="mesaj-lista" role="status"></p>
       <ul id="lista" class="lista"></ul>
 
+      <section id="mini-app" class="card mini-card" hidden>
+        <h2>Telegram Mini App</h2>
+        <dl class="mini-date">
+          <dt>Botul</dt><dd id="mini-bot">—</dd>
+          <dt>Adresa</dt><dd id="mini-adresa">—</dd>
+        </dl>
+        <p class="nota nota--mica">Butonul pune în bot, jos, butonul de meniu „Rezervare”, care deschide aplicația pe tot ecranul.</p>
+        <button type="button" id="conecteaza-mini" class="buton-mic">Conectează butonul „Rezervare” la bot</button>
+        <p id="rezultat-mini" class="nota nota--mica" role="status"></p>
+      </section>
+
       <p class="subsol-panou">
         <button type="button" id="test-telegram" class="buton-mic buton-mic--contur" hidden>Trimite un mesaj de probă pe Telegram</button>
         <span id="rezultat-test" role="status"></span>
       </p>
     </section>
+
+    <!-- Cheltuieli din bonuri și facturi -->
+    <section id="fila-cheltuieli" hidden>
+      <div class="bara">
+        <h1>Cheltuieli</h1>
+      </div>
+
+      <div class="card incarcare-doc" id="doc-alege">
+        <h2>Adaugă un bon sau o factură</h2>
+        <p class="nota nota--mica">Fotografiați documentul cu telefonul sau alegeți un PDF. Claude citește datele, iar dumneavoastră le verificați înainte de salvare.</p>
+        <label class="buton buton--lat alege-fisier">
+          📷 Fotografiază sau alege fișierul
+          <input type="file" id="doc-fisier" accept="image/*,application/pdf" hidden>
+        </label>
+      </div>
+
+      <div class="card" id="doc-lucru" hidden>
+        <div class="doc-lucru">
+          <div class="doc-previzualizare" id="doc-previzualizare"></div>
+          <div class="doc-dreapta">
+            <p id="doc-stare" class="doc-stare" role="status"></p>
+            <div id="doc-nu-e" class="cutie cutie--rosie" role="alert" hidden></div>
+            <form id="doc-form" class="doc-form" novalidate hidden>
+              <h2>Verificați și corectați</h2>
+              <div class="grila-2">
+                <div class="camp"><label for="d-tip">Tip document</label>
+                  <select id="d-tip" name="tip_document">
+                    <option value="bon">Bon fiscal</option><option value="factura">Factură</option>
+                    <option value="chitanta">Chitanță</option><option value="alt_document">Alt document</option>
+                  </select></div>
+                <div class="camp"><label for="d-data">Data</label><input id="d-data" name="data" type="date"></div>
+              </div>
+              <div class="camp"><label for="d-furnizor">De la cine (magazin, firmă)</label><input id="d-furnizor" name="furnizor" maxlength="200"><p class="eroare" data-pentru="furnizor"></p></div>
+              <div class="grila-2">
+                <div class="camp"><label for="d-suma">Suma</label><input id="d-suma" name="suma" inputmode="decimal"><p class="eroare" data-pentru="suma"></p></div>
+                <div class="camp"><label for="d-moneda">Moneda</label><select id="d-moneda" name="moneda"></select></div>
+              </div>
+              <div class="grila-2">
+                <div class="camp"><label for="d-categorie">Categoria</label><select id="d-categorie" name="categorie"></select></div>
+                <div class="camp"><label for="d-numar">Nr. document</label><input id="d-numar" name="numar_document" maxlength="100"></div>
+              </div>
+              <div class="camp"><label for="d-descriere">Ce s-a cumpărat</label><textarea id="d-descriere" name="descriere" rows="2" maxlength="1000"></textarea></div>
+              <p class="eroare eroare--generala" id="doc-eroare" role="alert"></p>
+              <div class="butoane-rand">
+                <button type="submit" class="buton" id="doc-salveaza">💾 Salvează cheltuiala</button>
+                <button type="button" class="buton-mic buton-mic--contur" id="doc-renunta">Renunță</button>
+              </div>
+            </form>
+            <button type="button" class="buton-mic buton-mic--contur" id="doc-alt" hidden>Alege alt fișier</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="bara bara--mica"><h2>Cheltuielile salvate</h2><span id="chelt-total" class="nota"></span></div>
+      <p id="chelt-mesaj" class="mesaj-lista" role="status"></p>
+      <ul id="chelt-lista" class="lista"></ul>
+    </section>
+
+    <!-- Imagini generate -->
+    <section id="fila-imagini" hidden>
+      <div class="bara">
+        <h1>Imagini pentru anunțuri</h1>
+        <span id="img-ramase" class="insigna"></span>
+      </div>
+      <form id="img-form" class="card" novalidate>
+        <h2>Din poza apartamentului, o imagine nouă</h2>
+        <p class="nota nota--mica">Imaginea se face pe server, cu Google Gemini („Nano Banana”). Rezultatul rămâne mai jos, în istoric.</p>
+        <label class="buton buton--contur-mare alege-fisier" id="img-alege">
+          📷 Alege poza apartamentului
+          <input type="file" id="img-fisier" accept="image/*" hidden>
+        </label>
+        <img id="img-previzualizare" class="img-previzualizare" alt="Poza aleasă" hidden>
+        <fieldset class="stiluri">
+          <legend>Ce fel de imagine</legend>
+          <label><input type="radio" name="stil" value="catalog" checked><span><b>Fotografie de catalog</b><small>4:3, pentru Booking / Airbnb / site</small></span></label>
+          <label><input type="radio" name="stil" value="postare"><span><b>Postare pătrată</b><small>1:1, Instagram / Facebook</small></span></label>
+          <label><input type="radio" name="stil" value="story"><span><b>Story vertical</b><small>9:16, Instagram / Telegram</small></span></label>
+        </fieldset>
+        <div class="camp"><label for="img-dorinte">Dorințe (opțional)</label>
+          <textarea id="img-dorinte" rows="2" maxlength="300" placeholder="de exemplu: lumină de seară, flori pe masă"></textarea></div>
+        <p class="eroare eroare--generala" id="img-eroare" role="alert"></p>
+        <button type="submit" class="buton buton--lat" id="img-genereaza">✨ Generează imaginea</button>
+        <p id="img-stare" class="nota nota--mica" role="status"></p>
+      </form>
+      <h2>Istoric</h2>
+      <p id="img-mesaj" class="mesaj-lista" role="status"></p>
+      <ul id="img-istoric" class="galerie"></ul>
+    </section>
   </main>
+
+  <!-- Fișa clientului -->
+  <dialog id="fisa" class="fisa">
+    <form method="dialog" class="fisa__inchide"><button aria-label="Închide">✕</button></form>
+    <div id="fisa-continut"></div>
+  </dialog>
+
+  <!-- Client nou, adăugat de mână -->
+  <dialog id="dialog-nou" class="fisa">
+    <form method="dialog" class="fisa__inchide"><button aria-label="Închide">✕</button></form>
+    <h2>Client nou</h2>
+    <form id="form-nou" novalidate>
+      <div class="camp"><label for="nou-nume">Nume</label><input id="nou-nume" name="nume" maxlength="100" required></div>
+      <div class="camp"><label for="nou-telefon">Telefon</label><input id="nou-telefon" name="telefon" type="tel" placeholder="+373 69 123 456"></div>
+      <div class="camp"><label for="nou-notite">Notițe</label><textarea id="nou-notite" name="notite" rows="3"></textarea></div>
+      <p class="eroare eroare--generala" id="nou-eroare" role="alert"></p>
+      <button type="submit" class="buton buton--lat" id="nou-salveaza">Adaugă în „Cerere nouă”</button>
+    </form>
+  </dialog>
 
   <script type="module" src="/admin.js"></script>
 </body>

@@ -1,8 +1,10 @@
-// POST /api/cerere – primește cererea din formular, o salvează în Supabase și anunță pe Telegram.
+// POST /api/cerere – primește cererea din formular, o salvează în Supabase, o pune în CRM (sursa „Site”)
+// și anunță pe Telegram.
 import { valideaza } from '../public/comun.js';
 import { insereazaCerere } from '../lib/supabase.js';
 import { mesajCerere, trimiteTelegram } from '../lib/telegram.js';
 import { corp, fara_cache, metodaNepermisa } from '../lib/raspuns.js';
+import { creeazaClient, detaliiCerere } from '../lib/crm.js';
 
 export default async function handler(req, res) {
   fara_cache(res);
@@ -21,6 +23,13 @@ export default async function handler(req, res) {
   } catch (e) {
     console.error('Salvarea cererii a eșuat:', e.message);
     return res.status(500).json({ ok: false, eroare: 'salvare' });
+  }
+
+  // Cererea intră singură în CRM, pe prima etapă. Dacă nu reușește, cererea rămâne oricum salvată.
+  try {
+    await creeazaClient({ nume: rand.nume, telefon: rand.telefon, sursa: 'Site', detalii: detaliiCerere(rand), cerere_id: rand.id });
+  } catch (e) {
+    console.error('Fișa din CRM nu s-a creat:', e.message);
   }
 
   // Cererea e deja salvată; dacă Telegram nu merge, o vedem oricum în panou.

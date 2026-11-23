@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Airport Boutique Residence – Telegram</title>
+  <meta name="theme-color" content="#1f3a3d">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f3a3d'/%3E%3Cpath d='M14 34 32 18l18 16v14H38V38H26v10H14z' fill='%23e9c46a'/%3E%3C/svg%3E">
+  <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
+  <link rel="stylesheet" href="/mini.css">
+</head>
+<body>
+  <main class="mini">
+    <!-- Se vede cât timp verificăm datele la server -->
+    <section id="ecran-incarcare" class="centru">
+      <div class="rotita" aria-hidden="true"></div>
+      <p id="t-incarcare">…</p>
+    </section>
+
+    <!-- Deschis într-un browser obișnuit: nicio dată, doar trimitere spre Telegram -->
+    <section id="ecran-doar-telegram" class="centru" hidden>
+      <div class="sigla" aria-hidden="true">🏠</div>
+      <h1>Airport Boutique Residence</h1>
+      <p id="t-doar-telegram"></p>
+      <a id="link-bot" class="buton" href="https://t.me" hidden></a>
+    </section>
+
+    <!-- În Telegram, după verificare -->
+    <section id="ecran-app" hidden>
+      <header class="antet">
+        <p class="eticheta">Airport Boutique Residence</p>
+        <h1 id="salut"></h1>
+        <p id="t-intro" class="slab"></p>
+      </header>
+
+      <form id="form" class="card" novalidate>
+        <h2 id="t-titlu-form"></h2>
+        <div class="rand">
+          <div class="camp">
+            <label for="sosire" id="l-sosire"></label>
+            <input id="sosire" name="sosire" type="date" required>
+            <p class="eroare" data-pentru="sosire"></p>
+          </div>
+          <div class="camp">
+            <label for="plecare" id="l-plecare"></label>
+            <input id="plecare" name="plecare" type="date" required>
+            <p class="eroare" data-pentru="plecare"></p>
+          </div>
+        </div>
+        <div class="camp">
+          <span class="eticheta-camp" id="l-oaspeti"></span>
+          <div class="oaspeti" role="radiogroup" aria-labelledby="l-oaspeti">
+            <label><input type="radio" name="oaspeti" value="1"><span>1</span></label>
+            <label><input type="radio" name="oaspeti" value="2" checked><span>2</span></label>
+            <label><input type="radio" name="oaspeti" value="3"><span>3</span></label>
+          </div>
+          <p class="eroare" data-pentru="oaspeti"></p>
+        </div>
+        <div class="camp">
+          <label for="telefon" id="l-telefon"></label>
+          <input id="telefon" name="telefon" type="tel" inputmode="tel" autocomplete="tel" placeholder="+373 69 123 456" required>
+          <p class="eroare" data-pentru="telefon"></p>
+        </div>
+        <div class="camp">
+          <label for="comentariu" id="l-comentariu"></label>
+          <textarea id="comentariu" name="comentariu" rows="2" maxlength="1000"></textarea>
+          <p class="eroare" data-pentru="comentariu"></p>
+        </div>
+        <p class="eroare eroare--generala" id="eroare-generala" role="alert"></p>
+        <button class="buton buton--lat" type="submit" id="trimite"></button>
+      </form>
+
+      <section id="multumim" class="card multumim" hidden>
+        <div class="bifa" aria-hidden="true">✓</div>
+        <h2 id="t-multumim"></h2>
+        <p id="t-multumim-text" class="slab"></p>
+        <button type="button" class="buton buton--contur" id="inca-una"></button>
+      </section>
+
+      <section id="cererile-mele" class="card" hidden>
+        <h2 id="t-cererile-mele"></h2>
+        <ul id="lista-cereri" class="lista-cereri"></ul>
+      </section>
+    </section>
+  </main>
+  <script type="module" src="/mini.js"></script>
+</body>
+</html>
