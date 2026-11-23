@@ -22,7 +22,36 @@ export async function incarca() {
   }
 }
 
+const LUNI = ['ianuarie', 'februarie', 'martie', 'aprilie', 'mai', 'iunie', 'iulie', 'august', 'septembrie', 'octombrie', 'noiembrie', 'decembrie'];
+
+/** Cât s-a cheltuit în fiecare lună și pe ce (după data documentului; fără dată – după ziua adăugării). */
+function deseneazaRaport(lista) {
+  const luni = new Map();
+  for (const c of lista) {
+    const cheie = (c.data || c.created_at).slice(0, 7);
+    if (!luni.has(cheie)) luni.set(cheie, { total: {}, categorii: new Map() });
+    const l = luni.get(cheie);
+    l.total[c.moneda] = (l.total[c.moneda] || 0) + Number(c.suma);
+    const k = `${c.categorie}|${c.moneda}`;
+    l.categorii.set(k, (l.categorii.get(k) || 0) + Number(c.suma));
+  }
+  const ordonate = [...luni.entries()].sort(([a], [b]) => b.localeCompare(a));
+  $('chelt-raport').replaceChildren(...ordonate.map(([cheie, l]) => {
+    const [an, luna] = cheie.split('-');
+    const randuri = [...l.categorii.entries()].sort((a, b) => b[1] - a[1]).map(([k, suma]) => {
+      const [cat, m] = k.split('|');
+      return el('li', {}, el('span', { textContent: cat }), el('b', { textContent: formatSuma(suma, m) }));
+    });
+    return el('section', { className: 'raport__luna' },
+      el('h3', { textContent: `${LUNI[Number(luna) - 1]} ${an}` }),
+      el('p', { className: 'raport__total', textContent: Object.entries(l.total).map(([m, s]) => formatSuma(s, m)).join(' + ') }),
+      el('ul', { className: 'raport__cat' }, ...randuri));
+  }));
+  if (!ordonate.length) $('chelt-raport').replaceChildren(el('p', { className: 'nota nota--mica', textContent: 'Raportul apare după prima cheltuială salvată.' }));
+}
+
 function deseneazaLista(lista) {
+  deseneazaRaport(lista);
   $('chelt-mesaj').textContent = lista.length ? '' : 'Încă nu există cheltuieli. Adăugați primul bon mai sus.';
   const total = {};
   for (const c of lista) total[c.moneda] = (total[c.moneda] || 0) + Number(c.suma);

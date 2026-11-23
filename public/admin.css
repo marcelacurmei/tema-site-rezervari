@@ -171,3 +171,9 @@ body[data-fila="crm"] .panou { max-width: 1400px; }
 }
 #fila-cheltuieli .card, #fila-imagini .card, .mini-card { max-width: none; margin: 0 0 16px; }
 .panou .card h2 { font-size: 1.2rem; }
+.raport { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.raport__luna { background: var(--suprafata); border-radius: var(--raza); box-shadow: var(--umbra); padding: 14px 16px; }
+.raport__luna h3 { margin: 0; font-size: .95rem; text-transform: capitalize; color: var(--text-slab); }
+.raport__total { font-size: 1.35rem; font-weight: 800; margin: 2px 0 8px; }
+.raport__cat { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: .9rem; }
+.raport__cat li { display: flex; justify-content: space-between; gap: 10px; border-top: 1px solid var(--margine); padding-top: 4px; }
